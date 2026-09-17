@@ -6,9 +6,19 @@ from lxml import etree
 import time
 import hashlib
 
+# ============================================================
+# KONFIGURASI (diisi lewat GitHub Secrets, lihat README.md)
+# ============================================================
+# ACCESS_TOKEN : fine-grained personal access token dengan izin:
+#                Account permissions   -> read:Followers, read:Starring, read:Watching
+#                Repository permissions -> read:Commit statuses, read:Contents,
+#                                           read:Issues, read:Metadata, read:Pull Requests
+# USER_NAME    : username GitHub kamu, mis. 'octocat'
+# BIRTHDAY     : (opsional) tanggal lahir/mulai ngoding, format YYYY-MM-DD.
+#                Kalau tidak diisi, baris "Uptime" tidak akan dihitung/diupdate.
 HEADERS = {'authorization': 'token ' + os.environ['ACCESS_TOKEN']}
 USER_NAME = os.environ['USER_NAME']
-BIRTHDAY_ENV = os.environ.get('BIRTHDAY')
+BIRTHDAY_ENV = os.environ.get('BIRTHDAY')  # contoh: '2003-04-12'
 
 QUERY_COUNT = {'user_getter': 0, 'follower_getter': 0, 'graph_repos_stars': 0, 'recursive_loc': 0, 'graph_commits': 0, 'loc_query': 0}
 
