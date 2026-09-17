@@ -6,6 +6,16 @@ from lxml import etree
 import time
 import hashlib
 
+# ============================================================
+# KONFIGURASI (diisi lewat GitHub Secrets, lihat README.md)
+# ============================================================
+# ACCESS_TOKEN : fine-grained personal access token dengan izin:
+#                Account permissions   -> read:Followers, read:Starring, read:Watching
+#                Repository permissions -> read:Commit statuses, read:Contents,
+#                                           read:Issues, read:Metadata, read:Pull Requests
+# USER_NAME    : username GitHub kamu, mis. 'octocat'
+# BIRTHDAY     : (opsional) tanggal lahir/mulai ngoding, format YYYY-MM-DD.
+#                Kalau tidak diisi, baris "Uptime" tidak akan dihitung/diupdate.
 HEADERS = {'authorization': 'token ' + os.environ['ACCESS_TOKEN']}
 USER_NAME = os.environ['USER_NAME']
 BIRTHDAY_ENV = os.environ.get('BIRTHDAY')  # contoh: '2003-04-12'
@@ -60,7 +70,10 @@ def graph_commits(start_date, end_date):
     }'''
     variables = {'start_date': start_date, 'end_date': end_date, 'login': USER_NAME}
     request = simple_request(graph_commits.__name__, query, variables)
-    return int(request.json()['data']['user']['contributionsCollection']['contributionCalendar']['totalContributions'])
+    payload = request.json()
+    if payload.get('data') is None or payload['data'].get('user') is None:
+        raise Exception('graph_commits() got an empty response from GitHub:', payload)
+    return int(payload['data']['user']['contributionsCollection']['contributionCalendar']['totalContributions'])
 
 
 def graph_repos_stars(count_type, owner_affiliation, cursor=None, add_loc=0, del_loc=0):
