@@ -1,16 +1,19 @@
-## Hi there 👋
+<a href="https://github.com/gathanega">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="dark_mode.svg">
+    <img alt="Profil GitHub Saya" src="light_mode.svg">
+  </picture>
+</a>
 
-<!--
-**gathanega/gathanega** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+<br/>
 
-Here are some ideas to get you started:
+<p align="left">
+  <img src="https://github-readme-stats.vercel.app/api?username=gathanega&show_icons=true&theme=default&hide_border=true" alt="GitHub Stats" height="165"/>
+  <img src="https://github-readme-streak-stats.herokuapp.com/?user=gathanega&hide_border=true" alt="GitHub Streak" height="165"/>
+</p>
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+<p align="left">
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=gathanega&layout=compact&hide_border=true" alt="Top Languages"/>
+</p>
+
+<img src="github-contribution-grid-snake.svg" alt="snake animation"/>
