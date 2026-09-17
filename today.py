@@ -53,6 +53,25 @@ def simple_request(func_name, query, variables):
     raise Exception(func_name, ' has failed with a', request.status_code, request.text, QUERY_COUNT)
 
 
+def total_commits_since(acc_created_at):
+    """
+    contributionsCollection cuma boleh direntang maksimal 1 tahun per query,
+    jadi kalau akun sudah lebih dari setahun, kita pecah jadi beberapa query per tahun lalu dijumlahkan.
+    """
+    start = datetime.datetime.strptime(acc_created_at, '%Y-%m-%dT%H:%M:%SZ')
+    end_overall = datetime.datetime.utcnow()
+    total = 0
+    cursor = start
+    while cursor < end_overall:
+        window_end = min(cursor + datetime.timedelta(days=365), end_overall)
+        total += graph_commits(
+            cursor.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            window_end.strftime('%Y-%m-%dT%H:%M:%SZ')
+        )
+        cursor = window_end
+    return total
+
+
 def graph_commits(start_date, end_date):
     """
     Mengambil total jumlah commit lewat GitHub GraphQL v4 API
@@ -415,7 +434,7 @@ if __name__ == '__main__':
     total_loc, loc_time = perf_counter(loc_query, ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'], 7)
     formatter('LOC (cached)', loc_time) if total_loc[-1] else formatter('LOC (no cache)', loc_time)
 
-    commit_data, commit_time = perf_counter(graph_commits, acc_date, datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'))
+    commit_data, commit_time = perf_counter(total_commits_since, acc_date)
     formatter('commit counter', commit_time)
     star_data, star_time = perf_counter(graph_repos_stars, 'stars', ['OWNER'])
     formatter('star counter', star_time)
