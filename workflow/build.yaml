@@ -1,0 +1,48 @@
+name: README build
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "0 4 * * *"  # setiap hari jam 04:00 UTC
+  workflow_dispatch: {}    # biar bisa dijalankan manual dari tab Actions
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Configure pip cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Update README file
+        env:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          USER_NAME: ${{ secrets.USER_NAME }}
+          BIRTHDAY: ${{ secrets.BIRTHDAY }}
+        run: python today.py
+
+      - name: Commit perubahan
+        run: |-
+          git add .
+          git diff
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions Bot"
+          git commit -m "Update README" -a || echo "Tidak ada perubahan"
+          git push
