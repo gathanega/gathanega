@@ -4,8 +4,8 @@ on:
     branches:
       - main
   schedule:
-    - cron: "0 4 * * *"  # setiap hari jam 04:00 UTC
-  workflow_dispatch: {}    # biar bisa dijalankan manual dari tab Actions
+    - cron: "0 4 * * *"
+  workflow_dispatch: {}
 
 jobs:
   build:
