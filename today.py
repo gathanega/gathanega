@@ -6,6 +6,16 @@ from lxml import etree
 import time
 import hashlib
 
+# ============================================================
+# KONFIGURASI (diisi lewat GitHub Secrets, lihat README.md)
+# ============================================================
+# ACCESS_TOKEN : fine-grained personal access token dengan izin:
+#                Account permissions   -> read:Followers, read:Starring, read:Watching
+#                Repository permissions -> read:Commit statuses, read:Contents,
+#                                           read:Issues, read:Metadata, read:Pull Requests
+# USER_NAME    : username GitHub kamu, mis. 'octocat'
+# BIRTHDAY     : (opsional) tanggal lahir/mulai ngoding, format YYYY-MM-DD.
+#                Kalau tidak diisi, baris "Uptime" tidak akan dihitung/diupdate.
 HEADERS = {'authorization': 'token ' + os.environ['ACCESS_TOKEN']}
 USER_NAME = os.environ['USER_NAME']
 BIRTHDAY_ENV = os.environ.get('BIRTHDAY')  # contoh: '2003-04-12'
@@ -293,6 +303,8 @@ def stars_counter(data):
     """
     total_stars = 0
     for node in data:
+        if node.get('node') is None:
+            continue
         total_stars += node['node']['stargazers']['totalCount']
     return total_stars
 
